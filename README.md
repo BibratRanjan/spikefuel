@@ -2,8 +2,7 @@
 
 [![Build Status](https://travis-ci.org/duguyue100/spikefuel.svg?branch=master)](https://travis-ci.org/duguyue100/spikefuel)
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)](http://doge.mit-license.org)
-[![Codacy](https://img.shields.io/codacy/e27821fb6289410b8f58338c7e0bc686.svg?maxAge=2592000)](https://www.codacy.com/app/duguyue100/spikefuel)
-[![Code coverage](https://api.codacy.com/project/badge/coverage/ff95c3e5360649638c61f2834bffd8b2)](https://www.codacy.com/app/duguyue100/spikefuel)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/cfd5f9a9dfd747379c92236d5986c90c)](https://www.codacy.com/app/duguyue100/spikefuel?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=duguyue100/spikefuel&amp;utm_campaign=Badge_Grade)
 
 SpikeFuel is a toolkit for converting popular visual benchmarks to
 spiking neuromorphic datasets.
