@@ -1,0 +1,11 @@
+{
+    "tracking_dir": "/Users/dgyHome/Downloads/TrackingDataset/",
+    "tracking_stats_path": "./data/tracking_stats.pkl",
+    "recording_save_path": "/Users/dgyHome/Documents/workspace/spikefuel/data/tracking_recordings",
+    "viewer_id": 2,
+    "screen_height": 540,
+    "screen_width": 720,
+    "work_win_scale": 0.9,
+    "bg_color": [127, 127, 127],
+    "fps": 100
+}

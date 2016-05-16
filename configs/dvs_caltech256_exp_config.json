@@ -1,0 +1,13 @@
+{
+    "caltech256_dir": "/Users/dgyHome/Downloads/256_ObjectCategories/",
+    "caltech256_stats_path": "./data/caltech256_stats.pkl",
+    "recording_save_path": "/Users/dgyHome/Documents/workspace/spikefuel/data/caltech256_recordings/",
+    "viewer_id": 2,
+    "screen_height": 540,
+    "screen_width": 720,
+    "saccade_size": 10,
+    "work_win_scale": 0.9,
+    "bg_color": [127, 127, 127],
+    "fps": 100,
+    "start_class": 61
+}

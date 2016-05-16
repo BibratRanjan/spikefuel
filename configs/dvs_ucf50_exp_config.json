@@ -1,0 +1,11 @@
+{
+    "ucf50_dir": "/Users/dgyHome/Downloads/UCF50/",
+    "ucf50_stats_path": "./data/ucf50_stats.pkl",
+    "recording_save_path": "/Users/dgyHome/Documents/workspace/spikefuel/data/ucf50_recordings/",
+    "viewer_id": 2,
+    "screen_height": 540,
+    "screen_width": 720,
+    "work_win_scale": 0.9,
+    "bg_color": [0, 0, 0],
+    "fps": 100
+}

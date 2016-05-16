@@ -1,0 +1,13 @@
+{
+    "caltech256_dir": "/home/inilab/data/256_ObjectCategories/",
+    "caltech256_stats_path": "./data/caltech256_stats.pkl",
+    "recording_save_path": "/home/inilab/data/caltech256_recordings/",
+    "viewer_id": 1,
+    "screen_height": 540,
+    "screen_width": 720,
+    "saccade_size": 3,
+    "work_win_scale": 0.9,
+    "bg_color": [127, 127, 127],
+    "fps": 10,
+    "start_class": 61
+}

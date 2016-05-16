@@ -1,0 +1,11 @@
+{
+    "ucf101_dir": "/Users/dgyHome/Downloads/UCF-101/",
+    "ucf101_stats_path": "./data/ucf101_stats.pkl",
+    "recording_save_path": "/Users/dgyHome/Documents/workspace/spikefuel/data/ucf101_recordings/",
+    "viewer_id": 2,
+    "screen_height": 540,
+    "screen_width": 720,
+    "work_win_scale": 0.9,
+    "bg_color": [127, 127, 127],
+    "fps": 100
+}

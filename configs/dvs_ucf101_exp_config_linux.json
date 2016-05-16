@@ -1,0 +1,11 @@
+{
+    "ucf101_dir": "/home/inilab/data/UCF-101/",
+    "ucf101_stats_path": "./data/ucf101_stats.pkl",
+    "recording_save_path": "/home/inilab/data/ucf101_recordings/",
+    "viewer_id": 1,
+    "screen_height": 540,
+    "screen_width": 720,
+    "work_win_scale": 0.9,
+    "bg_color": [127, 127, 127],
+    "fps": 30
+}
