@@ -12,9 +12,9 @@ before_install:
     - export PATH=/home/travis/miniconda2/bin:$PATH
     - conda update --yes conda
     - conda install --yes conda=3.19
-    - conda install -c soft-matter ffmpeg=2.2.4
-    - conda install -c soft-matter pyav=v0.2.3.post0
-    - conda install -c menpo opencv=2.4.11
+    - conda install --yes -c soft-matter ffmpeg=2.2.4
+    - conda install --yes -c soft-matter pyav=v0.2.3.post0
+    - conda install --yes -c menpo opencv=2.4.11
 
 install:
     - pip install -r requirements.txt
