@@ -30,6 +30,14 @@ want to mess with system's Python.
 + `pyav` (follow the [link](https://anaconda.org/soft-matter/pyav))
 + `opencv` (follow the [link](https://anaconda.org/menpo/opencv))
 
+## Installation
+
+You can install the bleeding edge version from `pip`:
+
+```
+pip install git+git://github.com/duguyue100/spikefuel.git
+```
+
 ## Contacts
 
 Yuhuang Hu  
