@@ -1,5 +1,7 @@
 # SpikeFuel
 
+[![Build Status](https://travis-ci.org/duguyue100/spikefuel.svg?branch=master)](https://travis-ci.org/duguyue100/spikefuel)
+
 SpikeFuel is a toolkit for converting popular visual benchmarks to
 spiking neuromorphic datasets.
 
