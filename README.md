@@ -14,7 +14,7 @@ The general objectives are:
 + Experiment configuration system (with JSON style). :checkered_flag:
 + Post signal analysis and selection tools. :checkered_flag:
 
-## Dependency
+## Requirements
 
 The scientific Python distribution - [Anaconda](https://anaconda.org/) will
 provide most dependencies. I recommend this distribution if you don't
