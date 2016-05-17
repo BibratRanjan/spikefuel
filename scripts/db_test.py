@@ -11,7 +11,7 @@ import h5py
 from spikefuel import dvsproc
 from time import gmtime, strftime
 
-option = "export-td-bounding-boxes"
+option = "export-vot-bounding-boxes"
 data_path = os.environ["SPIKEFUEL_DATA"]
 stats_path = os.path.join(data_path, "sf_data")
 
@@ -174,7 +174,9 @@ if option == "export-vot-bounding-boxes":
     vot_path = os.path.join(data_path, vot_fn)
     vot_db = h5py.File(vot_path, mode="r")
     vot_stats_path = os.path.join(stats_path, "vot_stats.pkl")
-    vot_gt_path = os.path.join(data_path, "vot-gt")
+    vot_gt_path = os.path.join(data_path, "vot-gt-shifted")
+    if not os.path.isdir(vot_gt_path):
+        os.mkdir(vot_gt_path)
 
     # load vot stats
     f = file(vot_stats_path, mode="r")
@@ -192,6 +194,7 @@ if option == "export-vot-bounding-boxes":
         header += "The structure is as follows:\n"
         header += "[Timestamps] [X1, Y1] [X2, Y2] [X3, Y3] [X4, Y4]"
         gt = vot_db[vidseq]["bounding_box"][()]
+        gt[:, 0] -= 133332
 
         np.savetxt(gt_savepath, gt, fmt='%.2f', delimiter=',', header=header)
         print "Ground Truth for %s is saved at %s" % (vidseq, gt_savepath)
