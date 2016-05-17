@@ -21,7 +21,7 @@ The general objectives are:
 ## Requirements
 
 The scientific Python distribution - [Anaconda](https://anaconda.org/) will
-provide most dependencies. I recommend this distribution if you don't
+provide most dependencies. I strongly recommend this distribution if you don't
 want to mess with system's Python.
 
 3rd party packages
@@ -41,6 +41,24 @@ You can install the bleeding edge version from `pip`:
 ```
 pip install git+git://github.com/duguyue100/spikefuel.git
 ```
+
+## jAER
+
+This project is designed to use along with [jAER](http://jaerproject.org) for
+accessing DVS camera, perform the recordings, etc. Please find the installation
+instructions of jAER from [here](https://sourceforge.net/p/jaer/wiki/jAER%20Installation/).
+For additional materials in setup this package, you can have a look at some development logs:
+
++ [On configuring jAER](https://github.com/duguyue100/spikefuel/wiki/Old-README-in-Development#on-configuring-jaer)
++ [On Remote Control of jAER using Terminal](https://github.com/duguyue100/spikefuel/wiki/Old-README-in-Development#on-remote-control-of-jaer-using-terminal)
++ [On Remote Control of jAER using Python](https://github.com/duguyue100/spikefuel/wiki/Old-README-in-Development#on-remote-control-of-jaer-using-python)
+
+_A detailed guide will be presented as a markdown document in this project in future._
+
+This project is developed with [DAViS240C](http://inilabs.com/products/dynamic-and-active-pixel-vision-sensor/davis-specifications/).
+Therefore most of the functions are specialized for this DVS camera.
+Supports for more DVS camera will be added in near future.
+Please use with caution.
 
 ## Contacts
 
