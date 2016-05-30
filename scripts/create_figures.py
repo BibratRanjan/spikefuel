@@ -16,7 +16,7 @@ import matplotlib.pylab as plt
 
 from spikefuel import dvsproc, gui, tools, helpers
 
-matplotlib.rcParams.update({'font.size': 150})
+matplotlib.rcParams.update({'font.size': 100})
 
 # options:
 # "vot", "tracking", "ucf50", "caltech256"
@@ -143,8 +143,8 @@ if option == "tracking-dvs-figure":
 
     pl = tracking_stats["primary_list"]
     sl = tracking_stats["secondary_list"]
-    pc = pl[6]
-    sc = sl[pc][3]
+    pc = pl[1]
+    sc = sl[pc][7]
     print sc
 
     seq_save_path = os.path.join(data_path, "all_imgs", "tracking_dvs_figs")
@@ -232,7 +232,7 @@ if option == "vot-dvs-figure":
     f.close()
     vot_list = vot_stats['vot_list']
     num_frames = vot_stats['num_frames']
-    vidseq = vot_list[0]
+    vidseq = vot_list[1]
 
     seq_save_path = join(data_path, "all_imgs", "vot_dvs_figs")
     num_frames = int(vot_db[vidseq].attrs["num_frames"])
@@ -579,11 +579,13 @@ elif option == "event-frequency":
     event_arr = dvsproc.cal_event_count(timestamps)
     event_freq = dvsproc.cal_event_freq(event_arr, window=1000)
 
-    plt.figure(figsize=(18, 8))
-    plt.plot(event_freq[:, 0]/1e6, event_freq[:, 1], linewidth=2)
-    plt.xlabel("Time (s)")
-    plt.ylabel("Event Frequency")
-    plt.savefig(os.path.join(data_path, "event_freq.pdf"))
+    plt.figure(figsize=(54, 24))
+    plt.plot(event_freq[:, 0]/1e6, event_freq[:, 1], linewidth=10)
+    plt.xlabel("Time (s)", fontsize=100)
+    plt.ylabel("Event Frequency", fontsize=100)
+    plt.savefig(os.path.join(data_path, "event_freq.eps"),
+                format="eps", dpi=1200, bbox_inches='tight',
+                pad_inches=0.5)
 elif option == "mnist-dvs":
     mnist_path = os.path.join(data_path, "MNIST_DVS")
 
