@@ -1,4 +1,15 @@
-"""Create DVS figures for examples.
+"""Create DVS figures for examples in the paper.
+
+DVS Benchmark Datasets for Object Tracking, Action Recognition and Object
+Recognition
+
+Please set your environment variable SPIKEFUEL_DATA:
+export SPIKEFUEL_DATA=/path/to/data
+
+and then place all HDF5 format data in this folder, then
+create a folder `sf_data` in `/path/to/data`, and place stats file in there.
+stats file can be found at:
+https://github.com/duguyue100/spikefuel/tree/master/data
 
 Author: Yuhuang Hu
 Email : duguyue100@gmail.com
