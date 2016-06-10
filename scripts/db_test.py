@@ -13,7 +13,7 @@ import h5py
 from spikefuel import dvsproc, helpers
 from time import gmtime, strftime
 
-option = "export-td-bounding-boxes"
+option = "export-vot-bounding-boxes"
 data_path = os.environ["SPIKEFUEL_DATA"]
 stats_path = os.path.join(data_path, "sf_data")
 
@@ -172,11 +172,11 @@ if option == "caltech256":
     print(wrong_recordings)
 
 if option == "export-vot-bounding-boxes":
-    vot_fn = "INI_VOT_30fps_20160424.hdf5"
+    vot_fn = "INI_VOT_30fps_20160610.hdf5"
     vot_path = os.path.join(data_path, vot_fn)
     vot_db = h5py.File(vot_path, mode="r")
     vot_stats_path = os.path.join(stats_path, "vot_stats.pkl")
-    vot_gt_path = os.path.join(data_path, "vot-gt-shifted")
+    vot_gt_path = os.path.join(data_path, "vot-gt")
     if not os.path.isdir(vot_gt_path):
         os.mkdir(vot_gt_path)
 
@@ -196,7 +196,7 @@ if option == "export-vot-bounding-boxes":
         header += "The structure is as follows:\n"
         header += "[Timestamps] [X1, Y1] [X2, Y2] [X3, Y3] [X4, Y4]"
         gt = vot_db[vidseq]["bounding_box"][()]
-        gt[:, 0] -= 133332
+        # gt[:, 0] -= 133332
 
         np.savetxt(gt_savepath, gt, fmt='%.2f', delimiter=',', header=header)
         print("Ground Truth for %s is saved at %s" % (vidseq, gt_savepath))
@@ -327,6 +327,91 @@ if option == "calculate-tracking-event-burst-timing":
                     data=gt.astype(np.float32),
                     dtype=np.float32)
                 print("[MESSAGE] Sequence %s bounding box is saved" % (sc))
+
+    print(key_idx_list)
+    print(key_idx_list_new)
+
+if option == "calculate-vot-event-burst-timing":
+    vot_fn = "INI_VOT_30fps_20160424.hdf5"
+    vot_path = os.path.join(data_path, vot_fn)
+    vot_data_path = os.path.join(data_path, "vot2015")
+    vot_db = h5py.File(vot_path, mode="a")
+    vot_stats_path = os.path.join(stats_path, "vot_stats.pkl")
+    vot_gt_path = os.path.join(data_path, "vot-gt-shifted")
+    if not os.path.isdir(vot_gt_path):
+        os.mkdir(vot_gt_path)
+
+    # load vot stats
+    f = file(vot_stats_path, mode="r")
+    vot_stats = pickle.load(f)
+    f.close()
+    vot_list = vot_stats['vot_list']
+    num_frames = vot_stats['num_frames']
+    num_seq = len(vot_list)
+    key_idx_list = []
+    key_idx_ts = []
+    for vidseq in vot_list:
+        timestamps = vot_db[vidseq]["timestamps"][()]
+
+        key_idx = dvsproc.cal_first_response(timestamps)
+        key_idx_list.append(key_idx)
+        key_idx_ts.append(timestamps[key_idx] - timestamps[0])
+        print("%s: %d" % (vidseq, timestamps[key_idx] - timestamps[0]))
+
+    key_idx_ts = np.array(key_idx_ts)
+    key_idx_ts = dvsproc.remove_outliers(key_idx_ts)
+    key_idx_time = round(np.mean(key_idx_ts))
+    print(key_idx_time)
+
+    key_idx_list_new = []
+    for i in xrange(num_seq):
+        vidseq = vot_list[i]
+        # load groundtruth
+        gt_path = os.path.join(vot_data_path, vot_list[i]+"/groundtruth.txt")
+        gt = np.loadtxt(gt_path, dtype=float, delimiter=",")
+        gt = np.reshape(gt, (gt.shape[0], 4, 2))
+
+        # load a frame as reference
+        frame_path = os.path.join(vot_data_path, vot_list[i]+"/00000001.jpg")
+        origin_frame = cv2.imread(frame_path)
+        print("[MESSAGE] Loading sequence %s" % (vot_list[i]))
+
+        timestamps = vot_db[vidseq]["timestamps"][()]
+        x_pos = vot_db[vidseq]["x_pos"][()]
+        y_pos = vot_db[vidseq]["y_pos"][()]
+        pol = vot_db[vidseq]["pol"][()]
+
+        key_idx = dvsproc.find_nearest(timestamps,
+                                       key_idx_time+timestamps[0])
+        key_idx_list_new.append(key_idx)
+        print("%s: %d" % (vidseq, key_idx))
+
+        (timestamps, x_pos,
+         y_pos, pol) = dvsproc.clean_up_events(timestamps, x_pos, y_pos,
+                                               pol, key_idx=key_idx)
+        frames, fs, ts = dvsproc.gen_dvs_frames(timestamps, x_pos, y_pos,
+                                                pol, num_frames[i], fs=3)
+        ts = np.array(ts)
+
+        shift = helpers.cal_img_shift(origin_frame.shape, frames[0].shape)
+        ratio = helpers.cal_bound_box_ratio(gt, origin_frame.shape[0],
+                                            origin_frame.shape[1])
+        gt = helpers.cal_bound_box_position(ratio,
+                                            frames[0].shape[0]-shift[1],
+                                            frames[0].shape[1]-shift[0])
+        gt[:, :, 0] += shift[0]/2.
+        gt[:, :, 1] += shift[1]/2.
+
+        gt = np.reshape(gt, (gt.shape[0], 8))
+        print("[MESSAGE] Size of groundtruth: "+str(gt.shape))
+
+        gt = np.vstack((ts, gt.T)).T
+
+        del vot_db[vidseq]["bounding_box"]
+        vot_db[vidseq].create_dataset("bounding_box",
+                                      data=gt.astype(np.float32),
+                                      dtype=np.float32)
+        print("[MESSAGE] Sequence %s bounding box is saved" % (vidseq))
 
     print(key_idx_list)
     print(key_idx_list_new)
