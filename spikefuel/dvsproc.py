@@ -290,25 +290,20 @@ def cal_running_std(event_freq, n=16):
     return o
 
 
-def clean_up_events(timestamps, xaddr, yaddr, pol, window=1000):
-    """Clean up event series based on standard deviation.
+def cal_first_response(timestamps, window=1000):
+    """Calculate the first event burst based on standard deviation.
 
     Parameters
     ----------
     timestamps : numpy.ndarray
         time stamps record
-    xaddr : numpy.ndarray
-        x position of event recordings
-    yaddr : numpy.ndarry
-        y position of event recordings
-    pol : nujmpy.ndarray
-        polarity of event recordings
     window : int
         sliding window over timestamps, by default, it's 1000 us = 1ms
 
     Returns
     -------
-    Cleaned signal
+    key_idx : int
+        The start index of the first event burst
     """
     # Calculate event count
     event_info = cal_event_count(timestamps)
@@ -326,10 +321,82 @@ def clean_up_events(timestamps, xaddr, yaddr, pol, window=1000):
 
     key_ts = event_freq[start_idx+2*n, 0]
 
-    key_idx = np.where(timestamps == key_ts)[0][0]
+    return np.where(timestamps == key_ts)[0][0]
+
+
+def clean_up_events(timestamps, xaddr, yaddr, pol, window=1000,
+                    key_idx=0):
+    """Clean up event series based on standard deviation.
+
+    Parameters
+    ----------
+    timestamps : numpy.ndarray
+        time stamps record
+    xaddr : numpy.ndarray
+        x position of event recordings
+    yaddr : numpy.ndarry
+        y position of event recordings
+    pol : nujmpy.ndarray
+        polarity of event recordings
+    window : int
+        sliding window over timestamps, by default, it's 1000 us = 1ms
+    key_idx : int
+        the timestamp that indicates the first event burst
+
+    Returns
+    -------
+    Cleaned signal
+    """
+    if key_idx == 0:
+        key_idx = cal_first_response(timestamps, xaddr, yaddr, pol, window)
 
     return (timestamps[key_idx:], xaddr[key_idx:], yaddr[key_idx:],
             pol[key_idx:])
+
+    # # Calculate event count
+    # event_info = cal_event_count(timestamps)
+    #
+    # # calculate events number within peroid of agiven window
+    # event_freq = cal_event_freq(event_info, window=window)
+    #
+    # # calculate running standard deviation
+    # n = 16
+    # o = cal_running_std(event_freq, n)
+    #
+    # start_idx = 0
+    # while (o[start_idx+1]/o[start_idx] < 3):
+    #     start_idx += 1
+    #
+    # key_ts = event_freq[start_idx+2*n, 0]
+    #
+    # key_idx = np.where(timestamps == key_ts)[0][0]
+    #
+    # return (timestamps[key_idx:], xaddr[key_idx:], yaddr[key_idx:],
+    #         pol[key_idx:])
+
+
+def remove_outliers(idx_ts):
+    """Remove outliers from a given timestamps array.
+
+    Parameters
+    ----------
+    idx_ts : numpy.ndarray
+        given timestamp array.
+
+    Returns
+    -------
+    idx_ts_new : numpy.ndarray.
+        outliers removed timestamp array.
+    """
+    idx_ts_new = idx_ts.copy()
+    summary = np.percentile(idx_ts_new, [25, 50, 75])
+    high_lim = summary[0] - 1.5 * (summary[2] - summary[1])
+    low_lim = summary[2] + 1.5 * (summary[2] - summary[1])
+
+    idx_ts_new = idx_ts_new[~(idx_ts_new >= low_lim)]
+    idx_ts_new = idx_ts_new[~(idx_ts_new <= high_lim)]
+
+    return idx_ts_new
 
 
 def gen_dvs_frames(timestamps, xaddr, yaddr, pol, num_frames, fs=3,

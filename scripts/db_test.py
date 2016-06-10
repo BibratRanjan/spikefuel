@@ -4,14 +4,16 @@ Author: Yuhuang Hu
 Email : duguyue100@gmail.com
 """
 
+from __future__ import print_function
 import os
 import numpy as np
+import cv2
 import cPickle as pickle
 import h5py
-from spikefuel import dvsproc
+from spikefuel import dvsproc, helpers
 from time import gmtime, strftime
 
-option = "export-vot-bounding-boxes"
+option = "export-td-bounding-boxes"
 data_path = os.environ["SPIKEFUEL_DATA"]
 stats_path = os.path.join(data_path, "sf_data")
 
@@ -30,7 +32,7 @@ if option == "vot":
     num_frames = vot_stats['num_frames']
 
     avg_num_frames = np.average(np.asarray(num_frames))
-    print "Average Number of Frames: %.2f" % (avg_num_frames)
+    print("Average Number of Frames: %.2f" % (avg_num_frames))
 
     tot_t = 0.
     tot_freq = 0.
@@ -43,11 +45,11 @@ if option == "vot":
         tot_freq += np.max(event_freq[:, 1])
         t = float(timestamps[-1]-timestamps[0])/1e6
         avg_freq += float(timestamps.shape[0])/float(t)
-        print "Video sequence %s is processed" % (vidseq)
+        print("Video sequence %s is processed" % (vidseq))
 
-    print "Average Recording Length: %.2f s" % (tot_t/len(vot_list))
-    print "Average Maximum Firing Rate: %.2f K" % (tot_freq/len(vot_list)/1e3)
-    print "Average Firing Rate: %.2f K" % (avg_freq/len(vot_list)/1e3)
+    print("Average Recording Length: %.2f s" % (tot_t/len(vot_list)))
+    print("Average Maximum Firing Rate: %.2f K" % (tot_freq/len(vot_list)/1e3))
+    print("Average Firing Rate: %.2f K" % (avg_freq/len(vot_list)/1e3))
 
 if option == "tracking":
     tracking_fn = "INI_TrackingDataset_30fps_20160424.hdf5"
@@ -80,13 +82,13 @@ if option == "tracking":
                 tot_freq += np.max(event_freq[:, 1])
                 t = float(timestamps[-1]-timestamps[0])/1e6
                 avg_freq += float(timestamps.shape[0])/float(t)
-                print "Video sequence %s is processed" % (sc)
+                print("Video sequence %s is processed" % (sc))
 
-    print "Total Number of Videos: %.2f" % (num_videos)
-    print "Average Number of Frames: %.2f" % (tot_frames/num_videos)
-    print "Average Recording Length: %.2f s" % (tot_t/num_videos)
-    print "Average Maximum Firing Rate: %.2f K" % (tot_freq/num_videos/1e3)
-    print "Average Firing Rate: %.2f K" % (avg_freq/num_videos/1e3)
+    print("Total Number of Videos: %.2f" % (num_videos))
+    print("Average Number of Frames: %.2f" % (tot_frames/num_videos))
+    print("Average Recording Length: %.2f s" % (tot_t/num_videos))
+    print("Average Maximum Firing Rate: %.2f K" % (tot_freq/num_videos/1e3))
+    print("Average Firing Rate: %.2f K" % (avg_freq/num_videos/1e3))
 
 if option == "ucf50":
     ucf50_fn = "INI_UCF50_30fps_20160424.hdf5"
@@ -118,15 +120,15 @@ if option == "ucf50":
             t = float(timestamps[-1]-timestamps[0])/1e6
             tot_freq.append(np.max(event_freq[:, 1]))
             avg_freq.append(float(timestamps.shape[0])/float(t))
-            print "Video sequence %s is processed" % (vid_n)
+            print("Video sequence %s is processed" % (vid_n))
 
     average_freq = np.average(np.asarray(tot_freq))
     mean_freq = np.average(np.asarray(avg_freq))
-    print "Total Number of Videos: %.2f" % (num_videos)
-    print "Average Number of Frames: %.2f" % (tot_frames/num_videos)
-    print "Average Recording Length: %.2f s" % (tot_t/num_videos)
-    print "Average Maximum Firing Rate: %.2f K" % (average_freq/1e3)
-    print "Average Firing Rate: %.2f K" % (mean_freq/1e3)
+    print("Total Number of Videos: %.2f" % (num_videos))
+    print("Average Number of Frames: %.2f" % (tot_frames/num_videos))
+    print("Average Recording Length: %.2f s" % (tot_t/num_videos))
+    print("Average Maximum Firing Rate: %.2f K" % (average_freq/1e3))
+    print("Average Firing Rate: %.2f K" % (mean_freq/1e3))
 
 if option == "caltech256":
     caltech_fn = "INI_Caltech256_10fps_20160424.hdf5"
@@ -159,15 +161,15 @@ if option == "caltech256":
                 avg_freq.append(float(timestamps.shape[0])/float(t))
             else:
                 wrong_recordings.append(img_n)
-            print "Video sequence %s is processed" % (img_n)
+            print("Video sequence %s is processed" % (img_n))
 
     average_freq = np.average(np.asarray(tot_freq))
     mean_freq = np.average(np.asarray(avg_freq))
-    print "Total Number of Videos: %.2f" % (num_videos)
-    print "Average Recording Length: %.2f s" % (tot_t/num_videos)
-    print "Average Maximum Firing Rate: %.2f K" % (average_freq/1e3)
-    print "Average Firing Rate: %.2f K" % (mean_freq/1e3)
-    print wrong_recordings
+    print("Total Number of Videos: %.2f" % (num_videos))
+    print("Average Recording Length: %.2f s" % (tot_t/num_videos))
+    print("Average Maximum Firing Rate: %.2f K" % (average_freq/1e3))
+    print("Average Firing Rate: %.2f K" % (mean_freq/1e3))
+    print(wrong_recordings)
 
 if option == "export-vot-bounding-boxes":
     vot_fn = "INI_VOT_30fps_20160424.hdf5"
@@ -197,10 +199,10 @@ if option == "export-vot-bounding-boxes":
         gt[:, 0] -= 133332
 
         np.savetxt(gt_savepath, gt, fmt='%.2f', delimiter=',', header=header)
-        print "Ground Truth for %s is saved at %s" % (vidseq, gt_savepath)
+        print("Ground Truth for %s is saved at %s" % (vidseq, gt_savepath))
 
 if option == "export-td-bounding-boxes":
-    tracking_fn = "INI_TrackingDataset_30fps_20160424.hdf5"
+    tracking_fn = "INI_TrackingDataset_30fps_20160610.hdf5"
     tracking_path = os.path.join(data_path, tracking_fn)
     tracking_db = h5py.File(tracking_path, mode="r")
     tracking_stats_path = os.path.join(stats_path, "tracking_stats.pkl")
@@ -233,4 +235,98 @@ if option == "export-td-bounding-boxes":
                 np.savetxt(sc_path, gt, fmt='%.2f', delimiter=',',
                            header=header)
 
-                print "Ground Truth for %s is saved at %s" % (sc, sc_path)
+                print("Ground Truth for %s is saved at %s" % (sc, sc_path))
+
+if option == "calculate-tracking-event-burst-timing":
+    tracking_fn = "INI_TrackingDataset_30fps_20160610.hdf5"
+    td_path = os.path.join(data_path, "TrackingDataset")
+    tracking_path = os.path.join(data_path, tracking_fn)
+    tracking_db = h5py.File(tracking_path, mode="a")
+    tracking_stats_path = os.path.join(stats_path, "tracking_stats.pkl")
+    tracking_gt_path = os.path.join(data_path, "tracking-gt")
+
+    f = file(tracking_stats_path, mode="r")
+    tracking_stats = pickle.load(f)
+    f.close()
+
+    pl = tracking_stats["primary_list"]
+    sl = tracking_stats["secondary_list"]
+    key_idx_list = []
+    key_idx_ts = []
+    for pc in pl:
+        # remove sequence Kalal until I got more memory
+        if pc != "Kalal":
+            for sc in sl[pc]:
+                timestamps = tracking_db[pc][sc]["timestamps"][()]
+
+                key_idx = dvsproc.cal_first_response(timestamps)
+                key_idx_list.append(key_idx)
+                key_idx_ts.append(timestamps[key_idx]-timestamps[0])
+                print("%s: %d" % (sc, timestamps[key_idx]-timestamps[0]))
+
+    key_idx_ts = np.array(key_idx_ts)
+    key_idx_ts = dvsproc.remove_outliers(key_idx_ts)
+    key_idx_time = round(np.mean(key_idx_ts))
+    print(key_idx_time)
+
+    key_idx_list_new = []
+    for pc in pl:
+        # remove sequence Kalal until I got more memory
+        if pc != "Kalal":
+            for sc in sl[pc]:
+                gt_path = os.path.join(td_path, pc, sc, "groundtruth.txt")
+                gt = np.loadtxt(gt_path, dtype=np.float32, delimiter=",")
+                gt = helpers.trans_groundtruth(gt, method="size")
+                gt = np.reshape(gt, (gt.shape[0], 4, 2))
+
+                # load one original frame
+                frame_path = os.path.join(td_path, pc, sc,
+                                          tracking_stats[sc][0])
+                origin_frame = cv2.imread(frame_path)
+
+                num_frames = int(tracking_db[pc][sc].attrs["num_frames"])
+
+                timestamps = tracking_db[pc][sc]["timestamps"][()]
+                x_pos = tracking_db[pc][sc]["x_pos"][()]
+                y_pos = tracking_db[pc][sc]["y_pos"][()]
+                pol = tracking_db[pc][sc]["pol"][()]
+
+                key_idx = dvsproc.find_nearest(timestamps,
+                                               key_idx_time+timestamps[0])
+                key_idx_list_new.append(key_idx)
+                print("%s: %d" % (sc, key_idx))
+
+                (timestamps, x_pos,
+                 y_pos, pol) = dvsproc.clean_up_events(timestamps, x_pos,
+                                                       y_pos, pol,
+                                                       key_idx=key_idx)
+                frames, fs, ts = dvsproc.gen_dvs_frames(timestamps, x_pos,
+                                                        y_pos, pol, num_frames,
+                                                        fs=3)
+                ts = np.array(ts)
+
+                shift = helpers.cal_img_shift(origin_frame.shape,
+                                              frames[0].shape)
+                ratio = helpers.cal_bound_box_ratio(gt, origin_frame.shape[0],
+                                                    origin_frame.shape[1])
+                gt = helpers.cal_bound_box_position(
+                        ratio,
+                        frames[0].shape[0]-shift[1],
+                        frames[0].shape[1]-shift[0])
+                gt[:, :, 0] += shift[0]/2.
+                gt[:, :, 1] += shift[1]/2.
+
+                gt = np.reshape(gt, (gt.shape[0], 8))
+                print("[MESSAGE] Size of groundtruth: "+str(gt.shape))
+
+                gt = np.vstack((ts, gt.T)).T
+
+                del tracking_db[pc][sc]["bounding_box"]
+                tracking_db[pc][sc].create_dataset(
+                    "bounding_box",
+                    data=gt.astype(np.float32),
+                    dtype=np.float32)
+                print("[MESSAGE] Sequence %s bounding box is saved" % (sc))
+
+    print(key_idx_list)
+    print(key_idx_list_new)
