@@ -1012,8 +1012,18 @@ if option == "y-time-figure":
     y_idx = y_pos[3000:33000]
 
     plt.figure(figsize=(30, 6))
-    plt.plot(time/1e6, y_idx, ".", linewidth=2)
+    plt.plot(time/1e3, y_idx, ".", linewidth=2)
     plt.ylim([0, 180])
-    plt.xlabel("Time (s)")
+    plt.xlabel("Time (ms)")
     plt.ylabel("y")
     plt.savefig(os.path.join(data_path, "y-time-figure.png"))
+
+    from mpl_toolkits.mplot3d import Axes3D
+    fig = plt.figure(figsize=(30, 15))
+    ax = fig.gca(projection='3d')
+    ax.plot(time/1e3, x_idx, y_idx, ".", linewidth=2)
+    ax.set_xlabel('Time (ms)')
+    ax.set_ylabel('X')
+    ax.set_zlabel('Y')
+
+    fig.savefig(os.path.join(data_path, "x-y-time-figure.png"))
