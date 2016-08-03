@@ -16,7 +16,7 @@ import matplotlib.pylab as plt
 
 from spikefuel import dvsproc, gui, tools, helpers
 
-matplotlib.rcParams.update({'font.size': 100})
+# matplotlib.rcParams.update({'font.size': 100})
 
 # options:
 # "vot", "tracking", "ucf50", "caltech256"
@@ -28,7 +28,7 @@ matplotlib.rcParams.update({'font.size': 100})
 # "vot-dvs-figure" "vot-figure" "tracking-dvs-figure" "tracking-figure"
 # "ucf50-figure", "ucf50-dvs-figure"
 # "gui-show"
-option = "tracking-dvs-figure"
+option = "y-time-figure"
 data_path = os.environ["SPIKEFUEL_DATA"]
 stats_path = os.path.join(data_path, "sf_data")
 
@@ -982,3 +982,38 @@ if option == "gui-show":
             break
 
     print "[MESSAGE] Experiment setup calibration is finished."
+
+if option == "y-time-figure":
+    ucf50_fn = "INI_UCF50_30fps_20160424.hdf5"
+    ucf50_path = join(data_path, ucf50_fn)
+    ucf50_db = h5py.File(ucf50_path, mode="r")
+    ucf50_stats_path = os.path.join(stats_path, "ucf50_stats.pkl")
+    vid_num = 10
+
+    f = file(ucf50_stats_path, mode="r")
+    ucf50_stats = pickle.load(f)
+    f.close()
+
+    ucf50_list = ucf50_stats["ucf50_list"]
+    cn = "RopeClimbing"
+
+    vid_name = ucf50_stats[cn][vid_num-1]
+    vid_n, vid_ex = os.path.splitext(vid_name)
+    seq_save_path = os.path.join(data_path, "all_imgs", "ucf50_dvs_figs")
+    num_frames = int(ucf50_db[cn][vid_n].attrs["num_frames"])
+
+    timestamps = ucf50_db[cn][vid_n]["timestamps"][()]
+    x_pos = ucf50_db[cn][vid_n]["x_pos"][()]
+    y_pos = ucf50_db[cn][vid_n]["y_pos"][()]
+    pol = ucf50_db[cn][vid_n]["pol"][()]
+
+    time = timestamps[3000:33000]
+    x_idx = x_pos[3000:33000]
+    y_idx = y_pos[3000:33000]
+
+    plt.figure(figsize=(30, 6))
+    plt.plot(time/1e6, y_idx, ".", linewidth=2)
+    plt.ylim([0, 180])
+    plt.xlabel("Time (s)")
+    plt.ylabel("y")
+    plt.savefig(os.path.join(data_path, "y-time-figure.png"))
