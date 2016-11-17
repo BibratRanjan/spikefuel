@@ -988,14 +988,14 @@ if option == "y-time-figure":
     ucf50_path = join(data_path, ucf50_fn)
     ucf50_db = h5py.File(ucf50_path, mode="r")
     ucf50_stats_path = os.path.join(stats_path, "ucf50_stats.pkl")
-    vid_num = 10
+    vid_num = 50
 
     f = file(ucf50_stats_path, mode="r")
     ucf50_stats = pickle.load(f)
     f.close()
 
     ucf50_list = ucf50_stats["ucf50_list"]
-    cn = "RopeClimbing"
+    cn = "Drumming"
 
     vid_name = ucf50_stats[cn][vid_num-1]
     vid_n, vid_ex = os.path.splitext(vid_name)
@@ -1007,9 +1007,9 @@ if option == "y-time-figure":
     y_pos = ucf50_db[cn][vid_n]["y_pos"][()]
     pol = ucf50_db[cn][vid_n]["pol"][()]
 
-    time = timestamps[3000:33000]
-    x_idx = x_pos[3000:33000]
-    y_idx = y_pos[3000:33000]
+    time = timestamps[3000:4000]
+    x_idx = x_pos[3000:4000]
+    y_idx = y_pos[3000:4000]
 
     plt.figure(figsize=(30, 6))
     plt.plot(time/1e3, y_idx, ".", linewidth=2)
