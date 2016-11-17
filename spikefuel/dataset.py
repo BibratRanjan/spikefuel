@@ -13,6 +13,44 @@ import numpy as np
 from spikefuel import dvsproc, helpers
 
 
+def lipreading_stats(save_path, directory=".",
+                     filename="lipreading_stats.pkl"):
+    """Generate statistic for Lipreading datasets.
+
+    Parameters
+    ----------
+    save_path : string
+        Lipreading dataset save path
+    directory : string
+        directory you want to save the stats, in default,
+        it's in current folder
+    filename : string
+        file name you want to save the stats, in default,
+        it's named "lipreading_stats.pkl"
+
+    Returns
+    -------
+    A file named with respected filename
+    """
+    if not os.path.isdir(save_path):
+        raise ValueError("Either path is not existed or is a relative path")
+
+    LIPREADING_STATS = {}
+    LIPREADING_LIST = next(os.walk(save_path))[1]
+    LIPREADING_STATS["lipreading_list"] = LIPREADING_LIST
+
+    for list_name in LIPREADING_LIST:
+        fns_temp = glob.glob(os.path.join(save_path, list_name)+"/"+"*.mpg")
+        file_names = []
+        for fn in fns_temp:
+            file_names.append(os.path.basename(fn))
+        LIPREADING_STATS[list_name] = file_names
+
+    F = open(os.path.join(directory, filename), mode="wb")
+    pickle.dump(LIPREADING_STATS, F, protocol=pickle.HIGHEST_PROTOCOL)
+    F.close()
+
+
 def caltech256_stats(save_path, directory=".",
                      filename="caltech256_stats.pkl"):
     """Generate statistic for Caltech-256 dataset.
@@ -46,7 +84,7 @@ def caltech256_stats(save_path, directory=".",
             file_names.append(os.path.basename(fn))
         caltech256_stats[list_name] = file_names
 
-    f = file(os.path.join(directory, filename), mode="wb")
+    f = open(os.path.join(directory, filename), mode="wb")
     pickle.dump(caltech256_stats, f, protocol=pickle.HIGHEST_PROTOCOL)
     f.close()
 
@@ -92,7 +130,7 @@ def ucf50_stats(save_path, directory=".", filename="ucf50_stats.pkl"):
             file_names.append(os.path.basename(fn))
         ucf50_stats[list_name] = file_names
 
-    f = file(os.path.join(directory, filename), mode="wb")
+    f = open(os.path.join(directory, filename), mode="wb")
     pickle.dump(ucf50_stats, f, protocol=pickle.HIGHEST_PROTOCOL)
     f.close()
 
@@ -154,7 +192,7 @@ def ucf101_stats(save_path, directory=".", filename="ucf101_stats.pkl"):
             file_names.append(os.path.basename(fn))
         ucf101_stats[list_name] = file_names
 
-    f = file(os.path.join(directory, filename), mode="wb")
+    f = open(os.path.join(directory, filename), mode="wb")
     pickle.dump(ucf101_stats, f, protocol=pickle.HIGHEST_PROTOCOL)
     f.close()
 
@@ -202,7 +240,7 @@ def tracking_stats(save_path, directory=".", filename="tracking_stats.pkl"):
 
     tracking_stats["secondary_list"] = secondary_list
 
-    f = file(os.path.join(directory, filename), mode="wb")
+    f = open(os.path.join(directory, filename), mode="wb")
     pickle.dump(tracking_stats, f, protocol=pickle.HIGHEST_PROTOCOL)
     f.close()
 
@@ -240,7 +278,7 @@ def vot_stats(listfile, directory=".", filename="vot_stats.pkl"):
     vot_stats['vot_list'] = vot_list
     vot_stats['num_frames'] = num_frames
 
-    f = file(os.path.join(directory, filename), mode="wb")
+    f = open(os.path.join(directory, filename), mode="wb")
     pickle.dump(vot_stats, f, protocol=pickle.HIGHEST_PROTOCOL)
     f.close()
 
