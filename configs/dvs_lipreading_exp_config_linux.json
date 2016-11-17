@@ -1,0 +1,11 @@
+{
+    "lipreading_dir": "/home/user/data/lipreading",
+    "lipreading_stats_path": "./lipreading_stats.pkl",
+    "recording_save_path": "/home/user/data/lipreading_rec",
+    "viewer_id": 1,
+    "screen_height": 540,
+    "screen_width": 720,
+    "work_win_scale": 0.9,
+    "bg_color": [127, 127, 127],
+    "fps": 40
+}
